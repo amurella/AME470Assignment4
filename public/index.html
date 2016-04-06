@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simple JS Eval</title>
+    
+    <script src="scripts/jquery-2.2.1.min.js"></script>
+    <script src="scripts/jquery.reject.js"></script>
+    <link rel="stylesheet" href="css/jquery.reject.css" type="text/css" />
+    <script src="scripts/Ply.js"></script>
+    <link rel="stylesheet" href="css/ply.css" type="text/css" />
+    <script src="scripts/offline.min.js"></script>
+    <link rel="stylesheet" href="css/offline-theme-default.css" type="text/css" />
+    <link rel="stylesheet" href="css/offline-language-english.css" type="text/css" />
+    <script src="scripts/moment.js"></script>
+    <script src="scripts/moment-with-locales.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src='uaSpoofing.js'> </script>   
+    <script src='scripts/md5.js'> </script> 
+    <script>
+
+     //var theUser = null;
+     var allSubs = null;
+     var allPosts = null;
+     var urlLink = [];
+     var sum = [];
+     var names = [];
+        var user = null;
+        //var allSubs = null;
+        var currentSub = null; //current feed that is open
+        var currentSubLink = null; //link for current feed that is open
+
+        var AI = {
+          show: function(){
+            var mu = "<div class='acInd fadeBox'>"+
+              '<div class="theSpinner"> </div>' +
+              "</div>";
+            document.body.innerHTML += mu;
+          },
+          hide:function(){
+            $(".acInd").remove();
+          }
+        }
+
+        var startUp = function() 
+        {   
+            spoofUserAgent();
+            showLoginModal();
+            jReject();
+            offline();
+        }    
+        var showLoginModal = function() {
+            Ply.dialog("prompt", {
+                title: "Login",
+                form: {
+                    email: "Email",
+                    password: {hint: "Password", type: "password"}
+                }
+            })
+            .then((ui) => {
+                var data = ui.data;
+                        
+                //Get email and password
+                var tempUser = data.email;
+                var password = hex_md5(data.password);
+                console.log(password);
+
+                if (tempUser.length > 0 && password.length > 0) {
+                    var url = "./login?user=" + tempUser + "&password=" + hex_md5(data.password);
+                    console.log(password);
+                    
+                    loadURL(url, function(data) {
+                        var res = data;
+                        
+                        if (res == "1") {
+                            user = tempUser;
+                            login();
+                        }
+                        else {
+                            Ply.dialog("alert", "Invalid email or password")
+                            .then((ui) => {
+                                showLoginModal();
+                            })
+                            .catch((ui) => {
+                                //Pressed cancel
+                            });
+                        }
+                    });
+                }
+            })
+            .catch((ui) => {
+                //Pressed cancel
+            });
+        }
+    
+        var showSignUp = function() {
+            Ply.dialog("prompt", {
+                title: "Sign Up",
+                form: {
+                    email: "Email",
+                    password: {hint: "Password", type: "password"}
+                }
+            })
+            .then((ui) => {
+                var data = ui.data;
+                    
+                //Get email and password
+                var tempUser = data.email;
+                var password = hex_md5(data.password);
+                console.log(password);
+                
+                if (tempUser.length > 0 && password.length > 0) {
+                    var url = "./createUser?user=" + tempUser + "&password=" + password;
+                    console.log(password);
+                    
+                    loadURL(url, function(data) {
+                        var res = data;
+                        
+                        if (res == "1") {
+                            user = tempUser;
+                            login();
+                        }
+                        else {
+                            Ply.dialog("alert", "Email already in use")
+                            .then((ui) => {
+                                showSignUp();
+                            })
+                            .catch((ui) => {
+                                //Pressed cancel
+                            });
+                        }
+                    });
+                }
+            })
+            .catch((ui) => {
+                //Pressed cancel
+            });
+        }
+    
+        var login = function() {
+            if (user != null) {
+                //Display user in top right corner
+           //     document.getElementById("username").innerHTML = user;
+                
+                //Change login button to logout
+                document.getElementById("loginButton").innerHTML = "Logout";
+                document.getElementById("loginButton").href = "javascript:logout()";
+                
+                //Hide sign up button
+                document.getElementById("signUpButton").style.visibility = "hidden";
+                
+               // //Show add button and feed list
+               // document.getElementById("addButton").style.visibility = "visible";
+                
+                loadMySubs(0); //open first feed after loading
+            }
+        }
+    
+        var logout = function() {
+            //Clear out user
+            user = null;
+//document.getElementById("username").innerHTML = "";
+            
+            //Change logout button to login
+            document.getElementById("loginButton").innerHTML = "Login";
+            document.getElementById("loginButton").href = "javascript:showLoginModal()";
+            
+            //Show sign up button
+            document.getElementById("signUpButton").style.visibility = "visible";
+            
+            //Hide add button and feed list
+            //document.getElementById("addButton").style.visibility = "hidden";
+            document.getElementById("myFeedList").innerHTML = "Login or sign up to view your feeds!";
+            
+            loadMySubs(); //no feeds to open
+        }
+    
+        var jReject = function()
+    {
+       $.reject({  
+        reject: 
+        { 
+          chrome: false, // Google Chrome  
+        }  
+      }); 
+    }
+
+    var offline = function()
+    {
+      $(function()
+      {
+        var 
+            $online = $('.online'),
+            $offline = $('.offline');
+
+        Offline.on('confirmed-down', function () {
+            $online.fadeOut(function () {
+                $offline.fadeIn();
+            });
+        });
+
+        Offline.on('confirmed-up', function () {
+            $offline.fadeOut(function () {
+                $online.fadeIn();
+            });
+        });
+      });
+    }
+    var loadMySubs = function()
+    {
+      var url = "./listSubs?user=" + user;
+      console.log(url);
+      loadURL(url, function(data){
+        var mySubs = JSON.parse(data);
+        allSubs = mySubs;
+        if(mySubs.length == 0){
+          document.getElementById("myFeedList").innerHTML = "No subscriptions"
+        }
+        else{
+          var markUp = "";
+          for(var i = 0; i < mySubs.length; i++)
+          {
+            var aFeed = mySubs[i];
+            urlLink[i] = aFeed.link;
+            var date = moment().format('L');
+            markUp += "<a href='javascript:postsInSub(" + i + ")' class = 'listItem'>" + "(" + date + ")    " + aFeed.id + " : " + aFeed.link + "</a>";
+            document.getElementById("feedDetails").innerHTML = "";
+          }
+          document.getElementById("myFeedList").innerHTML = markUp;
+        }
+      });
+      
+    }
+
+    var postsInSub = function(position)
+    {
+      names = [];
+      var url = "./getAllPosts?link=" + urlLink[position];
+      console.log(url);
+
+      loadURL(url, function(data) {
+        var posts = JSON.parse(data);
+        var postNumber = posts.feed.entry.length
+        allPosts = posts;
+        if(posts.length != 0) {
+          for(var i = 0; i < postNumber; i++)
+          {
+            var aFeed = posts;
+            if(JSON.stringify(aFeed.feed.entry[i].summary) == null) {
+              var nameLabel = JSON.stringify(aFeed.feed.entry[i].title.label);
+              console.log(nameLabel);
+              sum[i] = "No description available: " + JSON.stringify(aFeed.feed.entry[i].title.label); 
+
+            }
+            else {
+              sum[i] = JSON.stringify(aFeed.feed.entry[i].summary.label);
+            }
+            names.push(("<a href = javascript:descriptionSubs(" + i + ")>" + JSON.stringify(aFeed.feed.entry[i].title.label) + "</a>"));
+          }
+
+          document.getElementById("feedDetails").innerHTML = "";
+          document.getElementById("currFeedList").innerHTML = names;
+          document.getElementById("currFeedWrapper").innerHTML = 
+            "<a href='javascript:backToMyFeeds()' class='backButton'> Back </a>" + markUp;
+        if(ENV.screen.small){
+         $("#myFeedWrapper, #selFeedWrapper").fadeOut();
+            $("#currFeedWrapper").fadeIn();
+        }
+        AI.hide();
+        } 
+        else {
+          alert("There are no posts available.");
+        }
+      });
+    }
+
+    var descriptionSubs = function(position)
+    {
+      document.getElementById("feedDetails").innerHTML = sum[position];
+    }
+
+    var addFeed = function()
+    {
+      var link = prompt("Enter the subscription link: ");
+      if(link != null)
+      {
+        var url = "./addOrEditSub?id= " + allSubs.length + "&link=" + link + "&date=" + "&user=" + user;
+        loadURL(url, function(data) {
+        });
+      }
+      else
+      {
+        alert("Does not work");
+      }
+      
+      loadURL(url, function(data){
+          loadMySubs();
+      });
+    }
+
+
+    function backToMyFeeds(){
+      if(ENV.screen.small){
+        $("#currFeedWrapper, #selFeedWrapper").fadeOut();
+        $("#myFeedWrapper").fadeIn();
+      }
+    }
+    function backToCurrFeeds()
+    {   
+      if(ENV.screen.small){
+        $("#myFeedWrapper, #selFeedWrapper").fadeOut();
+        $("#currFeedWrapper").fadeIn();
+      }
+}
+
+  </script>
+
+
+  <style>
+  p{
+      text-align: center;
+  }
+  body{
+    margin: 0px;
+  }
+
+  a:link {
+    text-decoration: underline; color: green;
+  }
+
+  .bigScreen #myFeedWrapper, .bigScreen #currFeedWrapper{
+    width: 25%;
+  }
+  .smallScreen #myFeedWrapper, .smallScreen #currFeedWrapper{
+    width: 100%;
+    position: absolute;
+  }
+  .smallScreen #selFeedWrapper{
+    width: 100%;
+    position: absolute;
+  }
+
+  .bigScreen #selFeedWrapper{
+    width: 48%;
+  }
+  #myFeedWrapper, #currFeedWrapper{
+    display: inline-block;
+    width: 25%;
+    vertical-align: top;
+    color: purple;
+    background: #ddd;
+    min-height: 100%;
+  }
+  #selFeedWrapper{
+    display: inline-block;
+    width: 48%;
+    vertical-align: top;
+    color:blue;
+    min-height: 100%;
+  }
+   #myFeedList{
+    margin-top: 10px;
+  }
+  .listItem{
+    display: block;
+    padding: 5px;
+    white-space: word-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bigScreen .backButton{
+    display: none;
+  }
+  .fadeBox{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,.4);
+  }
+  
+
+   .button {
+        -moz-box-shadow: 0px 1px 0px 0px #f0f7fa;
+        -webkit-box-shadow: 0px 1px 0px 0px #f0f7fa;
+        box-shadow: 0px 1px 0px 0px #f0f7fa;
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #33bdef), color-stop(1, #019ad2));
+        background:-moz-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+        background:-webkit-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+        background:-o-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+        background:-ms-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+        background:linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bdef', endColorstr='#019ad2',GradientType=0);
+        background-color:#33bdef;
+        -moz-border-radius:6px;
+        -webkit-border-radius:6px;
+        border-radius:6px;
+        border:1px solid #057fd0;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:0px -1px 0px #5b6178;
+    }
+    .button:hover {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #019ad2), color-stop(1, #33bdef));
+        background:-moz-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+        background:-webkit-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+        background:-o-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+        background:-ms-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+        background:linear-gradient(to bottom, #019ad2 5%, #33bdef 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#019ad2', endColorstr='#33bdef',GradientType=0);
+        background-color:#019ad2;
+    }
+    .button:active {
+        position:relative;
+        top:1px;
+    }
+   #loginBar 
+   {
+        height: 30px;
+        padding: 15px;
+        background-color: teal;
+        border: 1px solid;
+        border-radius: 5px;
+        border-color: #D0D0D0;
+   }
+  </style>
+</head>
+
+<body onload = 'startUp()'> 
+    
+     <div id="loginBar">
+         <div style="float: left;"><a id="signUpButton" href="javascript:showSignUp()" class="button">Sign Up</a></div>
+         <div style="float: right;"><a id="loginButton" href="javascript:showLoginModal()" class="button">Login</a></div>
+      </div>
+  <div id='myFeedWrapper'>
+    <h1> My Feeds </h1>
+    <a href='javascript:addFeed()' class="button"> Add New </a>
+    <div id='myFeedList'> </div>
+  </div>
+  <div id='currFeedWrapper'>
+    <h1> </h1>
+    <div id='currFeedList'> </div>
+ </div>
+  <div id='selFeedWrapper'> 
+    <a href='javascript:backToCurrFeeds()' class="button" class='backButton'> Back </a>
+    <h1> </h1>
+    <div id='feedDetails' style="color:#00FFFF;"> </div>
+  </div>
+</body>
+</html>
