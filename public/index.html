@@ -243,7 +243,7 @@
         var postNumber = posts.feed.entry.length
         allPosts = posts;
 
-        if((posts.length != 0) && (mySubs.length != 0)) {
+        if((posts.length != 0)) {
           for(var i = 0; i < postNumber; i++)
           {
             var aFeed = posts;
@@ -271,8 +271,6 @@
         } 
         else {
           alert("There are no posts available.");
-          document.getElementById("feedDetails").innerHTML = "";
-          document.getElementById("currFeedList").innerHTML = "";
         }
       });
     }
