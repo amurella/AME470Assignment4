@@ -44,10 +44,10 @@
 
         var startUp = function() 
         {   
-            spoofUserAgent();
-            showLoginModal();
+            //spoofUserAgent();
             jReject();
             offline();
+            showLoginModal();
         }    
         var showLoginModal = function() {
             Ply.dialog("prompt", {
@@ -215,6 +215,8 @@
         allSubs = mySubs;
         if(mySubs.length == 0){
           document.getElementById("myFeedList").innerHTML = "No subscriptions"
+          document.getElementById("feedDetails").innerHTML = "";
+          document.getElementById("currFeedList").innerHTML = "";
         }
         else{
           var markUp = "";
