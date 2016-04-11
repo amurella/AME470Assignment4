@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Simple JS Eval</title>
     
     <script src="scripts/jquery-2.2.1.min.js"></script>
@@ -15,7 +15,7 @@
     <script src="scripts/moment.js"></script>
     <script src="scripts/moment-with-locales.js"></script>
     <script src="scripts/script.js"></script>
-    <script src='uaSpoofing.js'> </script>   
+    <script src='scripts/uaSpoofing.js'> </script>   
     <script src='scripts/md5.js'> </script> 
     <script>
 
@@ -215,7 +215,7 @@
         allSubs = mySubs;
         if(mySubs.length == 0){
           document.getElementById("myFeedList").innerHTML = "No subscriptions"
-          document.getElementById("feedDetails").innerHTML = "";
+          document.getElementById("selFeedWrapper").innerHTML = "";
           document.getElementById("currFeedList").innerHTML = "";
         }
         else{
@@ -226,13 +226,13 @@
             urlLink[i] = aFeed.link;
             var date = moment().format('L');
             markUp += "<a href='javascript:postsInSub(" + i + ")' class = 'listItem'>" + "(" + date + ")    " + aFeed.id + " : " + aFeed.link + "</a>";
-            document.getElementById("feedDetails").innerHTML = "";
+            document.getElementById("selFeedWrapper").innerHTML = "";
           }
           document.getElementById("myFeedList").innerHTML = markUp;
-          if(ENV.screen.small){
-            $("#currFeedWrapper, #selFeedWrapper").fadeOut();
-            $("#myFeedWrapper").fadeIn(); 
-         }
+            if(ENV.screen.small){
+        $("#currFeedWrapper, #selFeedWrapper").fadeOut();
+        $("#myFeedWrapper").fadeIn();
+      }
         }
       });
       
@@ -241,7 +241,7 @@
     var postsInSub = function(position)
     {
       AI.show();
-      names = [];
+      var names = "";
       var url = "./getAllPosts?link=" + urlLink[position];
       console.log(url);
 
@@ -263,19 +263,18 @@
             else {
               sum[i] = JSON.stringify(aFeed.feed.entry[i].summary.label);
             }
-            names.push(("<a href = javascript:descriptionSubs(" + i + ")>" + JSON.stringify(aFeed.feed.entry[i].title.label) + "</a>"));
+            names += ("<a href = javascript:descriptionSubs(" + i + ")>" + JSON.stringify(aFeed.feed.entry[i].title.label) + "</br>" +  "</a>");
           }
 
-          document.getElementById("feedDetails").innerHTML = "";
+          document.getElementById("selFeedWrapper").innerHTML = "";
           document.getElementById("currFeedList").innerHTML = names;
-          document.getElementById("currFeedWrapper").innerHTML =
-   "<a href='javascript:backToCurrFeeds()' class='backButton'> Back </a>"+  markUp;
-      if(ENV.screen.small){
-        $("#myFeedWrapper, #currFeedWrapper").fadeOut();
-        $("#selFeedWrapper").fadeIn();
+          if(ENV.screen.small){
+         $("#myFeedWrapper, #selFeedWrapper").fadeOut();
+            $("#currFeedWrapper").fadeIn();
+
+        }
+        AI.hide(); 
       }
-      AI.hide();
-        } 
         else {
           alert("There are no posts available.");
         }
@@ -284,7 +283,14 @@
 
     var descriptionSubs = function(position)
     {
-      document.getElementById("feedDetails").innerHTML = sum[position];
+      AI.show(); 
+      console.log("hello");
+      document.getElementById("selFeedWrapper").innerHTML = sum[position];
+       if(ENV.screen.small){
+        $("#myFeedWrapper, #currFeedWrapper").fadeOut();
+        $("#selFeedWrapper").fadeIn();
+      }
+      AI.hide();
     }
 
     var addFeed = function()
@@ -312,6 +318,7 @@
         $("#currFeedWrapper, #selFeedWrapper").fadeOut();
         $("#myFeedWrapper").fadeIn();
       }
+      
     }
     function backToCurrFeeds()
     {   
@@ -353,7 +360,6 @@
   }
   #myFeedWrapper, #currFeedWrapper{
     display: inline-block;
-    width: 25%;
     vertical-align: top;
     color: purple;
     background: #ddd;
@@ -361,7 +367,6 @@
   }
   #selFeedWrapper{
     display: inline-block;
-    width: 48%;
     vertical-align: top;
     color:blue;
     min-height: 100%;
@@ -378,6 +383,32 @@
   }
   .bigScreen .backButton{
     display: none;
+  }
+  .smallScreen .backButton{
+    -moz-box-shadow: 0px 1px 0px 0px #f0f7fa;
+        -webkit-box-shadow: 0px 1px 0px 0px #f0f7fa;
+        box-shadow: 0px 1px 0px 0px #f0f7fa;
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #33bdef), color-stop(1, #019ad2));
+        background:-moz-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+        background:-webkit-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+        background:-o-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+        background:-ms-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+        background:linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bdef', endColorstr='#019ad2',GradientType=0);
+        background-color:#33bdef;
+        -moz-border-radius:6px;
+        -webkit-border-radius:6px;
+        border-radius:6px;
+        border:1px solid #057fd0;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:0px -1px 0px #5b6178;
   }
   .fadeBox{
     position: fixed;
@@ -423,6 +454,22 @@
         filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#019ad2', endColorstr='#33bdef',GradientType=0);
         background-color:#019ad2;
     }
+
+    .backButton:hover {
+      background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #019ad2), color-stop(1, #33bdef));
+        background:-moz-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+        background:-webkit-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+        background:-o-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+        background:-ms-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+        background:linear-gradient(to bottom, #019ad2 5%, #33bdef 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#019ad2', endColorstr='#33bdef',GradientType=0);
+        background-color:#019ad2;
+    }
+
+    .backButton:active {
+       position:relative;
+        top:1px;
+    }
     .button:active {
         position:relative;
         top:1px;
@@ -443,6 +490,7 @@
     
      <div id="loginBar">
          <div style="float: left;"><a id="signUpButton" href="javascript:showSignUp()" class="button">Sign Up</a></div>
+          <div style="float: left;"><a href="javascript:backToMyFeeds()" class="backButton">Back</a></div>
          <div style="float: right;"><a id="loginButton" href="javascript:showLoginModal()" class="button">Login</a></div>
       </div>
   <div id='myFeedWrapper'>
@@ -454,8 +502,7 @@
     <h1> </h1>
     <div id='currFeedList'> </div>
  </div>
-  <div id='selFeedWrapper'> 
-    <a href='javascript:backToCurrFeeds()' class="button" class='backButton'> Back </a>
+  <div id='selFeedWrapper'>
     <h1> </h1>
     <div id='feedDetails' style="color:#00FFFF;"> </div>
   </div>
