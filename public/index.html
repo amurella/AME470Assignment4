@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Simple JS Eval</title>
     
     <script src="scripts/jquery-2.2.1.min.js"></script>
@@ -44,7 +44,7 @@
 
         var startUp = function() 
         {   
-            //spoofUserAgent();
+            spoofUserAgent();
             jReject();
             offline();
             showLoginModal();
@@ -229,6 +229,10 @@
             document.getElementById("feedDetails").innerHTML = "";
           }
           document.getElementById("myFeedList").innerHTML = markUp;
+          if(ENV.screen.small){
+            $("#currFeedWrapper, #selFeedWrapper").fadeOut();
+            $("#myFeedWrapper").fadeIn(); 
+         }
         }
       });
       
@@ -236,6 +240,7 @@
 
     var postsInSub = function(position)
     {
+      AI.show();
       names = [];
       var url = "./getAllPosts?link=" + urlLink[position];
       console.log(url);
@@ -263,13 +268,13 @@
 
           document.getElementById("feedDetails").innerHTML = "";
           document.getElementById("currFeedList").innerHTML = names;
-          document.getElementById("currFeedWrapper").innerHTML = 
-            "<a href='javascript:backToMyFeeds()' class='backButton'> Back </a>" + markUp;
-        if(ENV.screen.small){
-         $("#myFeedWrapper, #selFeedWrapper").fadeOut();
-            $("#currFeedWrapper").fadeIn();
-        }
-        AI.hide();
+          document.getElementById("currFeedWrapper").innerHTML =
+   "<a href='javascript:backToCurrFeeds()' class='backButton'> Back </a>"+  markUp;
+      if(ENV.screen.small){
+        $("#myFeedWrapper, #currFeedWrapper").fadeOut();
+        $("#selFeedWrapper").fadeIn();
+      }
+      AI.hide();
         } 
         else {
           alert("There are no posts available.");
