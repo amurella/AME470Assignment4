@@ -266,7 +266,7 @@
             }
             var price = aFeed.feed.entry["im:price"].label;
             if(price.toLowerCase() === "get") price = "$0.00";
-            names += ("<a href = javascript:descriptionSubs(" + i + ")>" + JSON.stringify(aFeed.feed.entry[i].title.label) + JSON.stringify(aFeed.feed.entry[i].title.label) + JSON.stringify(aFeed.feed.entry["im:artist"].label) + JSON.stringify(aFeed.feed.entry["im:image"][0].label)+ "</br>" +  "</a>");
+            names += ("<a href = javascript:descriptionSubs(" + i + ")>" + JSON.stringify(aFeed.feed.entry[i].title.label) + "</br>" +  "</a>");
           //  aPostSelected(index);
           }
 
