@@ -286,6 +286,7 @@
     {
       AI.show(); 
       console.log("hello");
+
       document.getElementById("selFeedWrapper").innerHTML = sum[position];
        if(ENV.screen.small){
         $("#myFeedWrapper, #currFeedWrapper").fadeOut();
@@ -362,14 +363,17 @@
   #myFeedWrapper, #currFeedWrapper{
     display: inline-block;
     vertical-align: top;
+    left-align: left;
     color: purple;
-    background: #ddd;
+    background: pink;
     min-height: 100%;
+    width: 25%;
+    margin-right: 15px;
   }
   #selFeedWrapper{
     display: inline-block;
     vertical-align: top;
-    color:blue;
+    color: purple;
     min-height: 100%;
   }
    #myFeedList{
@@ -484,6 +488,26 @@
         border-radius: 5px;
         border-color: #D0D0D0;
    }
+   .header 
+   {
+        display: table;
+        height: 25%;
+        width: 100%;
+        margin-bottom: 15px;
+        border: 2px solid;
+        border-radius: 5px;
+        border-color: black;
+   }
+   .content 
+   {
+        height: 75%;
+        padding: 15px;
+        overflow: auto;
+        background-color: teal;
+        border: 2px solid;
+        border-radius: 5px;
+        border-color: black;
+   }
   </style>
 </head>
 
@@ -495,17 +519,24 @@
          <div style="float: right;"><a id="loginButton" href="javascript:showLoginModal()" class="button">Login</a></div>
       </div>
   <div id='myFeedWrapper'>
-    <h1> My Feeds </h1>
-    <a href='javascript:addFeed()' class="button"> Add New </a>
-    <div id='myFeedList'> </div>
+    <div class="header"><h1>Add a Feed</h1>
+      <a href='javascript:addFeed()' class="button"> Add New </a>
+      <div id='myFeedList'> </div>
+    </div>
   </div>
   <div id='currFeedWrapper'>
+    <div class="header"><h1 id="currFeedTitle">Current Feed</h1></div>
     <h1> </h1>
-    <div id='currFeedList'> </div>
+    <div>
+      <div id='currFeedList'> </div>
+    </div>
  </div>
   <div id='selFeedWrapper'>
+     <div class="header"><h1 id="currPostTitle">Feed Details</h1></div>
     <h1> </h1>
-    <div id='feedDetails' style="color:#00FFFF;"> </div>
+    <div>
+      <div id='feedDetails' style="color:#00FFFF;"> </div>
+    </div>
   </div>
 </body>
 </html>
