@@ -346,7 +346,7 @@
   }
 
   .bigScreen #myFeedWrapper, .bigScreen #currFeedWrapper{
-    width: 25%;
+    width: 100%;
   }
   .smallScreen #myFeedWrapper, .smallScreen #currFeedWrapper{
     width: 100%;
@@ -358,23 +358,37 @@
   }
 
   .bigScreen #selFeedWrapper{
-    width: 48%;
+    width: 100%;
   }
   #myFeedWrapper, #currFeedWrapper{
-    display: inline-block;
+    display: inline-table;
     vertical-align: top;
-    left-align: left;
     color: purple;
+    text-align: center;
+    word-wrap: normal;
     background: pink;
-    min-height: 100%;
-    width: 25%;
+    height: 100%;
+    width: 100%;
     margin-right: 15px;
+    margin-top: 15px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: black;
   }
   #selFeedWrapper{
-    display: inline-block;
+    display: inline-table;
     vertical-align: top;
+    word-wrap: normal;
+    text-align: center;
     color: purple;
-    min-height: 100%;
+    background: pink;
+    height: 100%;
+    width: 100%;
+    margin-right: 15px;
+    margin-top: 15px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: black;
   }
    #myFeedList{
     margin-top: 10px;
@@ -484,19 +498,18 @@
         height: 30px;
         padding: 15px;
         background-color: teal;
-        border: 1px solid;
+        border: 2px solid;
         border-radius: 5px;
-        border-color: #D0D0D0;
+        border-color: black;
    }
    .header 
    {
         display: table;
-        height: 25%;
+        height: 15px;
         width: 100%;
         margin-bottom: 15px;
-        border: 2px solid;
-        border-radius: 5px;
-        border-color: black;
+        
+   
    }
    .content 
    {
@@ -525,16 +538,12 @@
     </div>
   </div>
   <div id='currFeedWrapper'>
-    <div class="header"><h1 id="currFeedTitle">Current Feed</h1></div>
-    <h1> </h1>
-    <div>
+    <div class="header"><h1 id="currFeedTitle">Current Feed</h1>    
       <div id='currFeedList'> </div>
     </div>
  </div>
   <div id='selFeedWrapper'>
-     <div class="header"><h1 id="currPostTitle">Feed Details</h1></div>
-    <h1> </h1>
-    <div>
+     <div class="header"><h1 id="currPostTitle">Feed Details</h1>
       <div id='feedDetails' style="color:#00FFFF;"> </div>
     </div>
   </div>
