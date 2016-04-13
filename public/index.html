@@ -264,8 +264,10 @@
             else {
               sum[i] = JSON.stringify(aFeed.feed.entry[i].summary.label);
             }
-            names += ("<a href = javascript:descriptionSubs(" + i + ")>" + JSON.stringify(aFeed.feed.entry[i].title.label) + "</br>" +  "</a>");
-            aPostSelected(index);
+            var price = aFeed.feed.entry["im:price"].label;
+            if(price.toLowerCase() === "get") price = "$0.00";
+            names += ("<a href = javascript:descriptionSubs(" + i + ")>" + JSON.stringify(aFeed.feed.entry[i].title.label) + JSON.stringify(aFeed.feed.entry[i].title.label) + JSON.stringify(aFeed.feed.entry["im:artist"].label) + JSON.stringify(aFeed.feed.entry["im:image"][0].label)+ "</br>" +  "</a>");
+          //  aPostSelected(index);
           }
 
           document.getElementById("selFeedWrapper").innerHTML = "";
@@ -296,7 +298,7 @@
       AI.hide();
     }
 
-    var aPostSelected = function(index)
+    /*var aPostSelected = function(index)
     {
       AI.show();
       var postObj = sum[index]
@@ -308,7 +310,7 @@
   if(price.toLowerCase() === "get") price = "$0.00";
   markUp += "<i style='color:#FFFFFF; font-family:verdana, sans-serif;'>" + price  + "</i>";
   
-    }
+    }*/
 
     var addFeed = function()
     {
