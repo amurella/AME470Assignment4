@@ -264,8 +264,6 @@
             else {
               sum[i] = JSON.stringify(aFeed.feed.entry[i].summary.label);
             }
-            var price = aFeed.feed.entry["im:price"].label;
-            if(price.toLowerCase() === "get") price = "$0.00";
             names += ("<a href = javascript:descriptionSubs(" + i + ")>" + JSON.stringify(aFeed.feed.entry[i].title.label) + "</br>" +  "</a>");
           //  aPostSelected(index);
           }
@@ -297,20 +295,6 @@
       }
       AI.hide();
     }
-
-    /*var aPostSelected = function(index)
-    {
-      AI.show();
-      var postObj = sum[index]
-      var markUp = "";
-       markUp += "<h1 style='text-shadow:1px 1px 1px rgba(0,0,0,1); font-weight:normal; color:#FFFFFF; font-size:36px; font-family:verdana, sans-serif;'>" + postObj.title.label + "</h1>";
-  markUp += "<h2 style='text-shadow:1px 1px 1px rgba(0,0,0,1); font-weight:normal; color:#FFFFFF; font-family:verdana, sans-serif;'>" + postObj["im:artist"].label + "</h1>";
-  markUp += "<img src='" + postObj["im:image"][0].label + "'></br></br>"
-  var price = postObj["im:price"].label;
-  if(price.toLowerCase() === "get") price = "$0.00";
-  markUp += "<i style='color:#FFFFFF; font-family:verdana, sans-serif;'>" + price  + "</i>";
-  
-    }*/
 
     var addFeed = function()
     {
@@ -458,13 +442,13 @@
         -moz-box-shadow: 0px 1px 0px 0px #f0f7fa;
         -webkit-box-shadow: 0px 1px 0px 0px #f0f7fa;
         box-shadow: 0px 1px 0px 0px #f0f7fa;
-        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, white), color-stop(1, #019ad2));
-        background:-moz-linear-gradient(top, white 5%, #019ad2 100%);
-        background:-webkit-linear-gradient(top, white 5%, #019ad2 100%);
-        background:-o-linear-gradient(top, white 5%, #019ad2 100%);
-        background:-ms-linear-gradient(top, white 5%, #019ad2 100%);
-        background:linear-gradient(to bottom, white 5%, #019ad2 100%);
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bdef', endColorstr='#019ad2',GradientType=0);
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, white), color-stop(1, purple));
+        background:-moz-linear-gradient(top, white 5%, purple 100%);
+        background:-webkit-linear-gradient(top, white 5%, purple 100%);
+        background:-o-linear-gradient(top, white 5%, purple 100%);
+        background:-ms-linear-gradient(top, white 5%, purple 100%);
+        background:linear-gradient(to bottom, white 5%, purple 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='white', endColorstr='purple',GradientType=0);
         background-color:white;
         -moz-border-radius:6px;
         -webkit-border-radius:6px;
@@ -472,32 +456,32 @@
         border:1px solid #057fd0;
         display:inline-block;
         cursor:pointer;
-        color:#ffffff;
+        color:black;
         font-family:Arial;
         font-size:15px;
         font-weight:bold;
         padding:6px 24px;
         text-decoration:none;
-        text-shadow:0px -1px 0px #5b6178;
+        text-shadow:0px -1px 0px black;
     }
     .button:hover {
         background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, white), color-stop(1, #33bdef));
-        background:-moz-linear-gradient(top, #019ad2 5%, white 100%);
-        background:-webkit-linear-gradient(top, #019ad2 5%, white 100%);
-        background:-o-linear-gradient(top, #019ad2 5%, white 100%);
-        background:-ms-linear-gradient(top, #019ad2 5%, white 100%);
-        background:linear-gradient(to bottom, #019ad2 5%, white 100%);
+        background:-moz-linear-gradient(top, purple 5%, white 100%);
+        background:-webkit-linear-gradient(top, purple 5%, white 100%);
+        background:-o-linear-gradient(top, purple 5%, white 100%);
+        background:-ms-linear-gradient(top, purple 5%, white 100%);
+        background:linear-gradient(to bottom, purple 5%, white 100%);
         filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#019ad2', endColorstr='#33bdef',GradientType=0);
         background-color:#019ad2;
     }
 
     .backButton:hover {
-      background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #019ad2), color-stop(1, #33bdef));
-        background:-moz-linear-gradient(top, #019ad2 5%, #33bdef 100%);
-        background:-webkit-linear-gradient(top, #019ad2 5%, #33bdef 100%);
-        background:-o-linear-gradient(top, #019ad2 5%, #33bdef 100%);
-        background:-ms-linear-gradient(top, #019ad2 5%, #33bdef 100%);
-        background:linear-gradient(to bottom, #019ad2 5%, #33bdef 100%);
+      background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, purple), color-stop(1, #33bdef));
+        background:-moz-linear-gradient(top, purple 5%, #33bdef 100%);
+        background:-webkit-linear-gradient(top, purple 5%, #33bdef 100%);
+        background:-o-linear-gradient(top, purple 5%, #33bdef 100%);
+        background:-ms-linear-gradient(top, purple 5%, #33bdef 100%);
+        background:linear-gradient(to bottom, purple 5%, #33bdef 100%);
         filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#019ad2', endColorstr='#33bdef',GradientType=0);
         background-color:#019ad2;
     }
